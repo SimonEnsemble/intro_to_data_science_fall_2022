@@ -316,75 +316,85 @@ combine(groupby(cities_data, "state"),
 md"_example 3_: group by state, compute rainfall per person"
 
 # ╔═╡ a6f0b99d-8b48-4758-89ee-9b2772965cab
-combine(groupby(df_cities, :state),
-	[:population, :rainfall] => 
+combine(groupby(cities_data, "state"),
+	["population", "rainfall"] => 
 	  ((pop_col, rain_col) -> sum(rain_col) / sum(pop_col)) => 
-	  :rainfall_per_population
+	  "rainfall_per_population"
 	)
 
 # ╔═╡ 8226dc8e-0362-11eb-17bf-47cae0df2907
-md"#### write a `DataFrame` to a `.csv` file
+md"## I/O with `.csv` files
 
 use the `CSV.jl` package.
 
 CSV = comma separated value
+
+### `DataFrame` to `.csv`
 "
 
 # ╔═╡ 907832ea-0362-11eb-2132-a3abadd4b1ee
 CSV.write("rainfall.csv", df_rain)
 
 # ╔═╡ c711c3f8-0393-11eb-2fbc-77693069c73f
-with_terminal() do
-	run(`cat rainfall.csv`)
-end
+run(`cat rainfall.csv`)
 
 # ╔═╡ 08e91b1c-035f-11eb-05d0-9fe60938a4e3
-md"#### read in a `.csv` file into a `DataFrame`
-use the `CSV.jl` package.
-
-CSV = comma separated value
+md"### `.csv` to `DataFrame`
+first, let's download the `.csv` from Github [here](https://raw.githubusercontent.com/SimonEnsemble/intro_to_data_science_fall_2022/main/data/incomes.csv) into our present working directory (`pwd`).
 "
 
 # ╔═╡ fdab541a-0393-11eb-0318-3390bd75a95d
 pwd() # present working directory to see where CSV looks for files
 
+# ╔═╡ 2604e77f-7ea0-4049-bb17-d7b5d0ca9c29
+readdir()
+
+# ╔═╡ 717b8f72-61ab-431c-9fc8-d518523b4674
+url = "https://raw.githubusercontent.com/SimonEnsemble/intro_to_data_science_fall_2022/main/data/incomes.csv"
+
+# ╔═╡ 2823012b-b80f-4532-a614-539eeba366da
+download(url, "incomes.csv")
+
 # ╔═╡ 1c01557a-035f-11eb-37e8-e9497003725f
-df_incomes = CSV.read(joinpath("..", "..", "data", "incomes.csv"), DataFrame)
+income_data = CSV.read("incomes.csv", DataFrame)
 
 # ╔═╡ 4cf973b8-0361-11eb-1777-cf02396ba052
 md"
-#### joins
-combine the rows of two data frames on a key column.
+## joining two tables of data
+\"join\" = combine the rows of two tables of data on a \"key\" column.
 
 there are [seven types of joins](http://juliadata.github.io/DataFrames.jl/stable/man/joins/). let's illustrate two here.
 
-goal: join information about *cities* from `df_cities` and `df_incomes`. thus the *key* here is `:city` since we aim to combine rows of the two `DataFrames` on the basis of the `:city` column.
+_goal_: join information about cities from `cities_data` and `income_data`. 
+the *key* column here is `\"city\"` since we aim to combine rows of the two `DataFrames` whose feature is the same in this column.
 
-subtleties here. 
-* San Francisco is in `df_incomes` but missing from `df_cities`
-* Bend, Eugene, Portland are in `df_cities` but missing from `df_incomes`
+there are two subtleties here:
+* the city of San Francisco appears in `income_data` but is missing from `cities_data`
+* the cities of Bend, Eugene, Portland appear in `cities_data` but are missing from `income_data`
 `innerjoin` and `outerjoin` are distinguished by how they handle these subtleties.
 
-##### inner join
-only keep rows where the city (the entry in the `on` column) is in _both_ `DataFrames`s
+### inner join
+only keep rows where the value in the \"key\" column appears in _both_ `DataFrames`'s
 (throw out rows that aren't common between the two)
 "
 
 # ╔═╡ 74379f7c-0361-11eb-0192-c59bca513893
-df_ij = innerjoin(df_cities, df_incomes, on=:city)
+data_ij = innerjoin(cities_data, income_data, on=:city)
 
 # ╔═╡ 80c12360-0361-11eb-3eb3-eddb35dac4a5
 md"
-##### outer join
+### outer join
 keep all rows, fill entries with `missing` if an attribute is missing in either `DataFrame`.
+
+note the `?` appears in the type under the column name to indicate some entries are `missing`.
 "
 
 # ╔═╡ 02bef8b2-0362-11eb-130f-f99cc7311f5a
-df_oj = outerjoin(df_cities, df_incomes, on=:city)
+data_oj = outerjoin(cities_data, income_data, on=:city)
 
 # ╔═╡ 098a5628-0362-11eb-33af-9fc2fbceddba
-md"#### missing values
-Julia has a data type to efficiently handle missing values
+md"## missing values
+Julia has a data type to efficiently handle missing values.
 "
 
 # ╔═╡ 12deee64-0362-11eb-3612-ed369a623583
@@ -397,19 +407,25 @@ typeof(missing)
 md"columns with missing values are arrays of whatever type but `Union`'d with the `Missing` type"
 
 # ╔═╡ 25a8858c-0362-11eb-3405-95aeea8c1338
-typeof(df_oj[:, :state])
+typeof(data_oj[:, "state"])
+
+# ╔═╡ 2f441675-6930-4f97-b7e1-dfc1c25cdbc6
+md"### removing rows with `missing` entries"
+
+# ╔═╡ 86ec1cfe-d75e-4f90-a7e7-ed438517641f
+data_oj
 
 # ╔═╡ 2fb25d0c-0362-11eb-16b3-b75f845f82a9
-md"remove all rows that have a missing attribute"
+md"..._all_ rows with a missing entry."
 
 # ╔═╡ 36ba914e-0362-11eb-0aa7-6fda9f1b4d02
-dropmissing(df_oj)
+dropmissing(data_oj)
 
 # ╔═╡ 38ab5560-0362-11eb-15cb-4595de21d218
-md"remove all rows with a missing state"
+md"...only rows with a `missing` entry in a certain column."
 
 # ╔═╡ 3edf858c-0362-11eb-3b47-5f53c1360718
-dropmissing(df_oj, :state)
+dropmissing(data_oj, "state")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -861,6 +877,9 @@ version = "17.4.0+0"
 # ╠═c711c3f8-0393-11eb-2fbc-77693069c73f
 # ╟─08e91b1c-035f-11eb-05d0-9fe60938a4e3
 # ╠═fdab541a-0393-11eb-0318-3390bd75a95d
+# ╠═2604e77f-7ea0-4049-bb17-d7b5d0ca9c29
+# ╠═717b8f72-61ab-431c-9fc8-d518523b4674
+# ╠═2823012b-b80f-4532-a614-539eeba366da
 # ╠═1c01557a-035f-11eb-37e8-e9497003725f
 # ╟─4cf973b8-0361-11eb-1777-cf02396ba052
 # ╠═74379f7c-0361-11eb-0192-c59bca513893
@@ -871,6 +890,8 @@ version = "17.4.0+0"
 # ╠═977c25ce-0394-11eb-0076-0955dcfe0ca1
 # ╟─1e41218c-0362-11eb-2ae3-17339b033f7a
 # ╠═25a8858c-0362-11eb-3405-95aeea8c1338
+# ╟─2f441675-6930-4f97-b7e1-dfc1c25cdbc6
+# ╠═86ec1cfe-d75e-4f90-a7e7-ed438517641f
 # ╟─2fb25d0c-0362-11eb-16b3-b75f845f82a9
 # ╠═36ba914e-0362-11eb-0aa7-6fda9f1b4d02
 # ╟─38ab5560-0362-11eb-15cb-4595de21d218
