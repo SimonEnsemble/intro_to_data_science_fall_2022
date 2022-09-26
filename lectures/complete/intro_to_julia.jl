@@ -446,6 +446,23 @@ A = rand(3, 3) # 3 × 3 matrix with random U[0, 1] entries
 # ╔═╡ cc7c41c4-fd2b-11ea-0fdc-9d18add5fea4
 A * b
 
+# ╔═╡ 644e6466-edc8-4aa0-93b0-6d5250262da4
+md"concatenate two arrays together, either vertically or horizontally.
+"
+
+# ╔═╡ dcaf697f-10c6-4ee4-b2a8-05179beffcd4
+begin
+	# two column vectors
+	u₁ = [1.0, 2.0]
+	u₂ = [3.0, 4.0]
+end
+
+# ╔═╡ d5df7396-cb2a-48b1-8d6d-f4078b992542
+vcat(u₁, u₂)
+
+# ╔═╡ a52e18c1-8441-4cca-b474-abbdc533d721
+hcat(u₁, u₂)
+
 # ╔═╡ e3af0b56-fd2b-11ea-1a50-cd73d2d9fd48
 md"### custom data structure"
 
@@ -1133,6 +1150,10 @@ version = "17.4.0+0"
 # ╟─bb84580c-fd2b-11ea-34fe-03e69a043bc4
 # ╠═c8fe380e-fd2b-11ea-3d76-edf4546e3d6b
 # ╠═cc7c41c4-fd2b-11ea-0fdc-9d18add5fea4
+# ╟─644e6466-edc8-4aa0-93b0-6d5250262da4
+# ╠═dcaf697f-10c6-4ee4-b2a8-05179beffcd4
+# ╠═d5df7396-cb2a-48b1-8d6d-f4078b992542
+# ╠═a52e18c1-8441-4cca-b474-abbdc533d721
 # ╟─e3af0b56-fd2b-11ea-1a50-cd73d2d9fd48
 # ╠═e9f164b4-fd2b-11ea-1b4b-4b95e685950a
 # ╟─376ef642-fd2d-11ea-10e8-c35996c11e35
