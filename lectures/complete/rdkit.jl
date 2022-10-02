@@ -75,7 +75,7 @@ pattern3 = get_qmol("[#6]=[#8]")
 smatch3 = get_substruct_match(molecule, pattern3)
 
 # ╔═╡ 228f389c-e1d8-4fcd-b855-667b77de332f
-HTML(get_svg(molecule, smatch3))
+HTML(get_svg(molecule, merge(smatch3, Dict("highlightColour" => [0, 1, 0]))))
 
 # ╔═╡ 1f279b48-27b7-49e1-bb6d-e704bbe6f69c
 md"e.g., search for an aromatic ring. look for _all_ matches."
