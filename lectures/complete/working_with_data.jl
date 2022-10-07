@@ -114,6 +114,16 @@ md"*approach 3:* the `transform` function, which transforms current column(s) in
 # ╔═╡ 46f095d4-630a-4661-bb37-a0084d11b6b6
 transform!(city_data, "rain" => (col -> 2 * col) => "twice_the_rainfall")
 
+# ╔═╡ d90a8d38-292f-43e4-ac27-f02e46e0c307
+md"### modify a column
+e.g. round the `\"population\"` so it contains only two significant digits. we pass `renamecols=false` to `transform!` so that, instead of creating a _new_ column, it modifies the `\"population\"` column.
+"
+
+# ╔═╡ 1756c3e7-b0f3-4f4a-927d-e52dc5cef44a
+transform(city_data, "population" => 
+	col -> Int.(round.(col, sigdigits=2)), 
+	renamecols=false)
+
 # ╔═╡ a67b30b0-0353-11eb-2d2f-871d7a5ffd36
 md"### count the # of rows/columns"
 
@@ -826,6 +836,8 @@ version = "17.4.0+0"
 # ╠═a5e9fc00-0353-11eb-1443-63b1c2edab7c
 # ╟─c94b33a0-3023-45fb-9c77-354579d742fb
 # ╠═46f095d4-630a-4661-bb37-a0084d11b6b6
+# ╟─d90a8d38-292f-43e4-ac27-f02e46e0c307
+# ╠═1756c3e7-b0f3-4f4a-927d-e52dc5cef44a
 # ╟─a67b30b0-0353-11eb-2d2f-871d7a5ffd36
 # ╠═6249187e-035a-11eb-2f6a-d3318cf2a996
 # ╠═6f8ca3cc-5935-4abe-b628-ac3c8cf4cd97
