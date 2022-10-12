@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.11
 
 using Markdown
 using InteractiveUtils
@@ -51,7 +51,7 @@ population = [57961, 647805, 168916]
 # ╔═╡ 2071b5b6-038f-11eb-182d-f392b2198f2e
 # city_data = DataFrame(city=city, population=population)
 city_data = DataFrame(city=["Corvallis", "Portland", "Eugene"],
-	                    population=[57961, 647805, 168916])
+	                  population=[57961, 647805, 168916])
 
 # ╔═╡ bc58ac1c-033c-11eb-2698-f5fc4c20b8ce
 md"### append rows
@@ -106,7 +106,7 @@ city_data
 md"*approach 2:* employ the `insertcols!` function, which allows you to insert a column at a specified location."
 
 # ╔═╡ a5e9fc00-0353-11eb-1443-63b1c2edab7c
-insertcols!(city_data, 2, :state => ["OR", "OR", "OR", "OR", "CA"])
+insertcols!(city_data, 2, "state" => ["OR", "OR", "OR", "OR", "CA"])
 
 # ╔═╡ c94b33a0-3023-45fb-9c77-354579d742fb
 md"*approach 3:* the `transform` function, which transforms current column(s) into a new one. see [the docs](https://dataframes.juliadata.org/stable/lib/functions/#DataFrames.transform!)."
@@ -211,7 +211,7 @@ md"
 "
 
 # ╔═╡ 1ad35930-035c-11eb-165d-2d70f7b07713
-city_data[2, :population]
+city_data[2, "population"]
 
 # ╔═╡ 9e01dd3a-0362-11eb-3d19-392ec2d06bd6
 md"
@@ -277,7 +277,7 @@ e.g., group the cities (rows) in `city_data` by state.
 "
 
 # ╔═╡ c1526020-035d-11eb-2d8a-d131aa445738
-gb_state = groupby(city_data, :state)
+gb_state = groupby(city_data, "state")
 
 # ╔═╡ c106f1b5-946c-44a1-bb63-ad3342adb6aa
 md"the `GroupedDataFrame` works like an array and can be iterated over."
@@ -432,10 +432,19 @@ md"..._all_ rows with a missing entry."
 dropmissing(data_oj)
 
 # ╔═╡ 38ab5560-0362-11eb-15cb-4595de21d218
-md"...only rows with a `missing` entry in a certain column."
+md"...only rows with a `missing` entry in a certain column.
+
+(note: `dropmissing!` is a function that modifies the `DataFrame` passed as an argument.)
+"
 
 # ╔═╡ 3edf858c-0362-11eb-3b47-5f53c1360718
 dropmissing(data_oj, "state")
+
+# ╔═╡ da29ea48-7cda-4286-8c59-a5b845268d6d
+md"convert `missing` entries to something different."
+
+# ╔═╡ 2919a4e2-895e-4ac7-b5eb-7f635519847c
+coalesce.(data_oj, "?")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -908,5 +917,7 @@ version = "17.4.0+0"
 # ╠═36ba914e-0362-11eb-0aa7-6fda9f1b4d02
 # ╟─38ab5560-0362-11eb-15cb-4595de21d218
 # ╠═3edf858c-0362-11eb-3b47-5f53c1360718
+# ╟─da29ea48-7cda-4286-8c59-a5b845268d6d
+# ╠═2919a4e2-895e-4ac7-b5eb-7f635519847c
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
