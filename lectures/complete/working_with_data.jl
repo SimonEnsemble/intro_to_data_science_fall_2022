@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.13
 
 using Markdown
 using InteractiveUtils
@@ -113,6 +113,13 @@ md"*approach 3:* the `transform` function, which transforms current column(s) in
 
 # ╔═╡ 46f095d4-630a-4661-bb37-a0084d11b6b6
 transform!(city_data, "rain" => (col -> 2 * col) => "twice_the_rainfall")
+
+# ╔═╡ 5b7446f2-8cbb-462b-9c48-78d45f110d13
+md"note `transform` can apply a function that operates on multiple columns. the below does not modify the data frame because we omit the `!` from `transform!`; rather, it returns a copy of it."
+
+# ╔═╡ 49fa8c65-1ac8-46d9-a064-2c24fe76accb
+transform(city_data, 
+	["city", "state"] => ((col_1, col_2) -> col_1 .* ", " .* col_2) => "city, state")
 
 # ╔═╡ d90a8d38-292f-43e4-ac27-f02e46e0c307
 md"### modify a column
@@ -775,7 +782,7 @@ version = "1.8.1"
 [[Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.0"
+version = "1.10.1"
 
 [[Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
@@ -845,6 +852,8 @@ version = "17.4.0+0"
 # ╠═a5e9fc00-0353-11eb-1443-63b1c2edab7c
 # ╟─c94b33a0-3023-45fb-9c77-354579d742fb
 # ╠═46f095d4-630a-4661-bb37-a0084d11b6b6
+# ╟─5b7446f2-8cbb-462b-9c48-78d45f110d13
+# ╠═49fa8c65-1ac8-46d9-a064-2c24fe76accb
 # ╟─d90a8d38-292f-43e4-ac27-f02e46e0c307
 # ╠═1756c3e7-b0f3-4f4a-927d-e52dc5cef44a
 # ╟─a67b30b0-0353-11eb-2d2f-871d7a5ffd36
